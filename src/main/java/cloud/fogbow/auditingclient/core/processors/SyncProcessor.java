@@ -6,9 +6,11 @@ import cloud.fogbow.auditingclient.core.models.AuditingMessage;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.FederatedNetwork;
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class SyncProcessor implements Runnable {
     private static final Logger LOGGER = Logger.getLogger(SyncProcessor.class);
 
@@ -22,6 +24,7 @@ public class SyncProcessor implements Runnable {
         this.sleepTime = 0L;
     }
 
+    @Override
     public void run() {
         while(true) {
             try {
@@ -29,12 +32,13 @@ public class SyncProcessor implements Runnable {
                 List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 AuditingMessage message = new AuditingMessage(activeComputes, activeFedNets);
+                System.out.println("sending");
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);
             } catch(Exception ex) {
                 LOGGER.error(ex.getMessage(), ex);
-                break;
+                return;
             }
         }
     }
