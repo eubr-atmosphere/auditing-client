@@ -5,6 +5,7 @@ import cloud.fogbow.auditingclient.core.DatabaseScanner;
 import cloud.fogbow.auditingclient.core.models.AuditingMessage;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.FederatedNetwork;
+import cloud.fogbow.auditingclient.util.CloudUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,8 @@ public class SyncProcessor implements Runnable {
             try {
                 List<Compute> activeComputes = dbScanner.scanActiveComputes();
                 List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
+
+                CloudUtil.getInstance().assignComputesIps(activeComputes);
 
                 AuditingMessage message = new AuditingMessage(activeComputes, activeFedNets);
                 System.out.println("sending");
