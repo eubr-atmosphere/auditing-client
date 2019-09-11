@@ -16,4 +16,16 @@ public class AuditingMessage {
     public void setCurrentTimestamp(Timestamp currentTimestamp) {
         this.currentTimestamp = currentTimestamp;
     }
+
+    public List<Compute> getActiveComputes() {
+        return activeComputes;
+    }
+
+    public List<FederatedNetwork> getActiveFederatedNetworks() {
+        return activeFederatedNetworks;
+    }
+
+    public Timestamp getCurrentTimestamp() {
+        return currentTimestamp;
+    }
 }

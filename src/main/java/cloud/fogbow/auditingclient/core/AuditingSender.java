@@ -11,6 +11,7 @@ import cloud.fogbow.common.util.connectivity.HttpRequestClient;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -25,9 +26,16 @@ public class AuditingSender {
     public void send(AuditingMessage message) throws FogbowException{
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         message.setCurrentTimestamp(currentTimestamp);
-        Map<String, String> body = new HashMap<>();
-        body.put("message", GsonHolder.getInstance().toJson(message, AuditingMessage.class));
+        Map<String, String> body = jsonfy(message);
 
         HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, null, body);
+    }
+
+    private Map<String, String> jsonfy(AuditingMessage message) {
+        Map<String, String> json = new HashMap<>();
+        json.put("activeComputes", GsonHolder.getInstance().toJson(message.getActiveComputes(), List.class));
+        json.put("activeFederatedNetworks", GsonHolder.getInstance().toJson(message.getActiveFederatedNetworks(), List.class));
+        json.put("currentTimestamp", GsonHolder.getInstance().toJson(message.getCurrentTimestamp(), Timestamp.class));
+        return json;
     }
 }
