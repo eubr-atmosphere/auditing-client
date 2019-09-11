@@ -1,12 +1,13 @@
 package cloud.fogbow.auditingclient.util.constants;
 
 public class Constants {
-    public static String IDENTITY_PROVIDER_URL_KEY = "cloud_identity_provider_url";
-    public static String CONF_FILE_KEY = "auditing-client.conf";
-    public static String PROJECT_NAME_KEY = "projectname";
-    public static String USERNAME_KEY = "username";
-    public static String PASSWORD_KEY = "password";
-    public static String DOMAIN_KEY = "domain";
-    public static String CLOUD_URL_KEY = "cloud_url";
-    public static String SERVER_ENDPOINT_KEY = "server_endpoint";
+    public static final String IDENTITY_PROVIDER_URL_KEY = "cloud_identity_provider_url";
+    public static final String CONF_FILE_KEY = "auditing-client.conf";
+    public static final String PROJECT_NAME_KEY = "projectname";
+    public static final String USERNAME_KEY = "username";
+    public static final String PASSWORD_KEY = "password";
+    public static final String DOMAIN_KEY = "domain";
+    public static final String CLOUD_URL_KEY = "cloud_url";
+    public static final String SERVER_ENDPOINT_KEY = "server_endpoint";
+    public static final String SITE_KEY = "site";
 }

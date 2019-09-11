@@ -2,6 +2,7 @@ package cloud.fogbow.auditingclient.util;
 
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.GetComputeResponse;
+import cloud.fogbow.auditingclient.core.models.Ip;
 import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.exceptions.FogbowException;
 import cloud.fogbow.common.models.OpenStackV3User;
@@ -61,14 +62,14 @@ public class OpenStackCloudUtil {
         }
     }
 
-    private Map<String, String[]> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
-        Map<String, String[]> result = new HashMap<>();
+    private Map<String, List<Ip>> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
+        Map<String, List<Ip>> result = new HashMap<>();
         for(String key : responseAddresses.keySet()) {
-            List<String> addresses = new ArrayList<>();
+            List<Ip> addresses = new ArrayList<>();
             for(GetComputeResponse.Address address: responseAddresses.get(key)) {
-                addresses.add(address.getAddress());
+                addresses.add(new Ip(address.getAddress()));
             }
-            result.put(key, (String[])addresses.toArray());
+            result.put(key, addresses);
         }
         return result;
     }

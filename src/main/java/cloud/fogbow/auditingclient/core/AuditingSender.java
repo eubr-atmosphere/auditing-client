@@ -17,15 +17,17 @@ import java.util.Properties;
 
 public class AuditingSender {
     private String endpoint;
+    private Properties properties;
 
     public AuditingSender() {
-        Properties properties = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY);
+        properties = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY);
         this.endpoint = properties.getProperty(Constants.SERVER_ENDPOINT_KEY);
     }
 
     public void send(AuditingMessage message) throws FogbowException{
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         message.setCurrentTimestamp(currentTimestamp);
+        message.setFogbowSite(properties.getProperty(Constants.SITE_KEY));
         Map<String, String> body = jsonfy(message);
 
         HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, null, body);
