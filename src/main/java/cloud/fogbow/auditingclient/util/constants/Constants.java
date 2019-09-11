@@ -8,4 +8,5 @@ public class Constants {
     public static String PASSWORD_KEY = "password";
     public static String DOMAIN_KEY = "domain";
     public static String CLOUD_URL_KEY = "cloud_url";
+    public static String SERVER_ENDPOINT_KEY = "server_endpoint";
 }

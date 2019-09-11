@@ -35,7 +35,6 @@ public class SyncProcessor implements Runnable {
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
 
                 AuditingMessage message = new AuditingMessage(activeComputes, activeFedNets);
-                System.out.println("sending");
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);

@@ -9,7 +9,7 @@ public class Compute {
         return instanceId;
     }
 
-    public void setAddresses(Map<String, String> addresses) {
+    public void setAddresses(Map<String, String[]> addresses) {
 
     }
 }

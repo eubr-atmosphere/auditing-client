@@ -12,10 +12,7 @@ import cloud.fogbow.common.util.connectivity.cloud.openstack.OpenStackHttpClient
 import cloud.fogbow.common.util.connectivity.cloud.openstack.OpenStackHttpToFogbowExceptionMapper;
 import org.apache.http.client.HttpResponseException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class OpenStackCloudUtil {
 
@@ -51,16 +48,28 @@ public class OpenStackCloudUtil {
         return instance;
     }
 
-    public void assignComputesIps(List<Compute> computes) throws FogbowException{
+    public void assignComputesIps(List<Compute> computes) throws FogbowException {
         for(Compute compute: computes) {
             String jsonResponse = null;
             try {
                 jsonResponse = this.client.doGetRequest(endpoint + "/" + compute.getInstanceId(), cloudUser);
                 GetComputeResponse computeResponse = GetComputeResponse.fromJson(jsonResponse);
-                compute.setAddresses(computeResponse.getAddresses());
+                compute.setAddresses(getAddresses(computeResponse.getAddresses()));
             } catch (HttpResponseException e) {
                 OpenStackHttpToFogbowExceptionMapper.map(e);
             }
         }
+    }
+
+    private Map<String, String[]> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
+        Map<String, String[]> result = new HashMap<>();
+        for(String key : responseAddresses.keySet()) {
+            List<String> addresses = new ArrayList<>();
+            for(GetComputeResponse.Address address: responseAddresses.get(key)) {
+                addresses.add(address.getAddress());
+            }
+            result.put(key, (String[])addresses.toArray());
+        }
+        return result;
     }
 }
