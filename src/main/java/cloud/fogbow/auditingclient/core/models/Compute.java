@@ -9,6 +9,11 @@ public class Compute {
     private Map<String, List<Ip>> ipAddresses;
     private String serializedSystemUser;
 
+    public Compute(String instanceId, String serializedSystemUser) {
+        this.serializedSystemUser = serializedSystemUser;
+        this.instanceId = instanceId;
+    }
+
     public Compute(String instanceId, Map<String, List<Ip>> ipAddresses, String serializedSystemUser) {
         this.instanceId = instanceId;
         this.ipAddresses = ipAddresses;

@@ -5,6 +5,7 @@ import cloud.fogbow.auditingclient.core.models.FederatedNetwork;
 import cloud.fogbow.common.exceptions.UnexpectedException;
 import cloud.fogbow.common.util.BashScriptRunner;
 
+import java.nio.file.Paths;
 import java.util.List;
 
 public class DatabaseScanner {
@@ -15,14 +16,16 @@ public class DatabaseScanner {
     }
 
     public List<Compute> scanActiveComputes() throws UnexpectedException {
-        String[] scriptExecutorCommand = {"cd scripts", "&&", "./scan-active-computes.sh"};
+        String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-computes.sh";
+        String[] scriptExecutorCommand = {script};
         BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
         System.out.println(output.getContent());
         return null;
     }
 
     public List<FederatedNetwork> scanActiveFederatedNetworks() throws UnexpectedException{
-        String[] scriptExecutorCommand = {"cd scripts", "&&", "./scan-active-fednet.sh"};
+        String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-fednet.sh";
+        String[] scriptExecutorCommand = {script};
         BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
         System.out.println(output.getContent());
         return null;

@@ -1,0 +1,16 @@
+---
+- hosts: client-machine
+  vars:               
+    run: bash -x run.sh    
+  tasks:     
+    - name: Copy Files
+      copy: src="../private/" dest="/home/ubuntu"  
+
+    - name: Setting up environment
+      shell: "{{ setup_env }}"
+      become: yes          
+
+    - name: Run
+      shell: "{{ run }}"
+      become: yes
+
