@@ -18,9 +18,14 @@ ENV HOME /root
 # Define working directory.
 WORKDIR /root
 
+# Installing Common
+RUN \
+  git clone https://github.com/fogbow/common.git && \
+  (cd common && git checkout add-bashrunner && mvn install -Dmaven.test.skip=true)
+
 # Installing client
 RUN \
-  https://github.com/eubr-atmosphere/auditing-client.git && \
+  git clone https://github.com/eubr-atmosphere/auditing-client.git && \
   (cd auditing-client && mvn install -Dmaven.test.skip=true)
 
 # Define working directory.
