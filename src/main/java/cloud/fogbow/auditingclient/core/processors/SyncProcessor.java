@@ -33,7 +33,7 @@ public class SyncProcessor implements Runnable {
                 List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
-
+                logComputes(activeComputes);
                 AuditingMessage message = new AuditingMessage(activeComputes, activeFedNets);
                 sender.send(message);
 
@@ -42,6 +42,12 @@ public class SyncProcessor implements Runnable {
                 LOGGER.error(ex.getMessage(), ex);
                 return;
             }
+        }
+    }
+
+    private void logComputes(List<Compute> computes) {
+        for(Compute compute: computes) {
+            LOGGER.info(compute.toString());
         }
     }
 }

@@ -62,4 +62,9 @@ public class Compute {
     public void setAddresses(Map<String, List<Ip>> addresses) {
         this.ipAddresses = addresses;
     }
+
+    @Override
+    public String toString() {
+        return "id = " + instanceId + "ips: "+ ipAddresses.toString();
+    }
 }
