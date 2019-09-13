@@ -1,6 +1,6 @@
 #!/bin/bash
 
-image=eubraatmosphere/auditing-client:latest
+image=eubraatmosphere/auditing-client:$1
 sudo docker pull $image
 container_id=`sudo docker run --name auditing-client -it -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker $image`
 

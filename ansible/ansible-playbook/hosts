@@ -1,5 +1,5 @@
 [client-machine]
-10.11.4.34
+10.11.16.40
 [client-machine:vars]
-ansible_ssh_private_key_file=/home/emanueljbm/.ssh/fogbow_priv
+ansible_ssh_private_key_file=/home/raonismaneoto/Downloads/id_rsa_fogbow_default_private_key
 ansible_python_interpreter=/usr/bin/python3
