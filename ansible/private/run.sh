@@ -15,4 +15,4 @@ fi
 sudo docker exec $container_id /bin/bash -c "mkdir src/main/resources/private"
 sudo docker cp $DIR_PATH/auditing-client.conf $container_id:/root/auditing-client/src/main/resources/private
 sudo docker exec $container_id /bin/bash -c "chmod +x src/main/java/cloud/fogbow/auditingclient/core/scripts/scan*"
-sudo docker exec $container_id /bin/bash -c "./mvnw spring-boot:run -X > log.out 2> log.err" &
+sudo docker exec $container_id /bin/bash -c "mvn spring-boot:run -X > log.out 2> log.err" &
