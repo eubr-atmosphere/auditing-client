@@ -12,6 +12,5 @@ public class Main {
     public void startProcessor() throws Exception{
         Thread processor = new Thread(new SyncProcessor());
         processor.start();
-        processor.join();
     }
 }

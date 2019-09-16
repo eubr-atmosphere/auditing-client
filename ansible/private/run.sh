@@ -2,7 +2,7 @@
 
 image=eubraatmosphere/auditing-client:$1
 sudo docker pull $image
-container_id=`sudo docker run --name auditing-client -it -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker $image`
+container_id=`sudo docker run --name auditing-client -idt -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker $image`
 
 DIR_PATH="`dirname \"$0\"`"              # relative
 DIR_PATH="`( cd \"$DIR_PATH\" && pwd )`"  # absolutized and normalized
