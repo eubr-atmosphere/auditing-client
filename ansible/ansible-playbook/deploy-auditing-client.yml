@@ -1,7 +1,7 @@
 ---
 - hosts: client-machine
   vars:               
-    run: bash -x auditing/run.sh v1   
+    run: bash -x auditing/run.sh v2
   tasks:     
     - name: Copy Files
       copy: src="../private/" dest="/home/ubuntu/auditing"         

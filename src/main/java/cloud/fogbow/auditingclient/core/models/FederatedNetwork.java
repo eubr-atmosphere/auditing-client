@@ -7,10 +7,12 @@ import java.util.Objects;
 public class FederatedNetwork {
     private String serializedSystemUser;
     private Map<String, List<Ip>> ipAddresses;
+    private String orderId;
 
-    public FederatedNetwork(String serializedSystemUser, Map<String, List<Ip>> ipAddresses) {
+    public FederatedNetwork(String serializedSystemUser, Map<String, List<Ip>> ipAddresses, String orderId) {
         this.serializedSystemUser = serializedSystemUser;
         this.ipAddresses = ipAddresses;
+        this.orderId = orderId;
     }
 
     public String getSerializedSystemUser() {
@@ -29,17 +31,24 @@ public class FederatedNetwork {
         this.ipAddresses = ipAddresses;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FederatedNetwork that = (FederatedNetwork) o;
-        return Objects.equals(serializedSystemUser, that.serializedSystemUser) &&
-                Objects.equals(ipAddresses, that.ipAddresses);
+        return Objects.equals(orderId, that.orderId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(serializedSystemUser, ipAddresses);
+        return Objects.hash(orderId);
     }
 }
