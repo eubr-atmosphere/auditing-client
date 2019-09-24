@@ -1,3 +1,4 @@
+.vscode
 target/*
 src/main/resources/private/
 auditing-client.log

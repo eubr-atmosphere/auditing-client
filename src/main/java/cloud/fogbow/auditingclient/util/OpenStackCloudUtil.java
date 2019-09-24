@@ -37,7 +37,6 @@ public class OpenStackCloudUtil {
         cloudUser = identityProviderPlugin.getCloudUser(credentials);
 
         endpoint = properties.getProperty(Constants.CLOUD_URL_KEY) + cloudUser.getProjectId() + "/SERVERS";
-
     }
 
     public static OpenStackCloudUtil getInstance() throws FogbowException{
