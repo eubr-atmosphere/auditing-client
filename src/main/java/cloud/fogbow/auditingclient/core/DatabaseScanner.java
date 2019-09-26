@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DatabaseScanner {
+    private static final String SQL_SPLIT_DIVIDER = "\\|";
+    private static final String SQL_INDEX_OF_DIVIDER = "|";
     private BashScriptRunner bashScriptRunner;
 
     public DatabaseScanner() {
@@ -36,27 +38,27 @@ public class DatabaseScanner {
 
     private List<Compute> getComputeFromOutput(String content) {
         List<Compute> result = new ArrayList<>();
-        int sqlFieldSepartorIndex;
-        while((sqlFieldSepartorIndex=content.indexOf('|')) != -1) {
-            String serializedSysUser = content.substring(0, sqlFieldSepartorIndex-1).trim();
-            content = content.substring(sqlFieldSepartorIndex+1).trim();
-            String instance_id = content.split(" ")[0];
-            content = content.substring(instance_id.length()+1).trim();
+        String[] tuples = content.split("[\\r\\n]+");
+
+        for (String tuple : tuples) {
+            String serializedSysUser = tuple.split(SQL_SPLIT_DIVIDER)[0].trim();
+            String instance_id = tuple.split(SQL_SPLIT_DIVIDER)[1].trim();
             result.add(new Compute(instance_id, serializedSysUser));
         }
+
         return result;
     }
 
     private List<FederatedNetwork> getFedNetFromOutput(String content) {
         List<FederatedNetwork> result = new ArrayList<>();
         int sqlFieldSepartorIndex;
-        while((sqlFieldSepartorIndex=content.indexOf('|')) != -1) {
+        while((sqlFieldSepartorIndex=content.indexOf(SQL_INDEX_OF_DIVIDER)) != -1) {
             String serializedSysUser = content.substring(0, sqlFieldSepartorIndex-1).trim();
             content = content.substring(sqlFieldSepartorIndex+1).trim();
-            String ips = content.split("|")[0];
+            String ips = content.split(SQL_SPLIT_DIVIDER)[0];
             List<Ip> ipInstances = mapStringToIps(ips);
             content = content.substring(ips.length()+2).trim();
-            String computeId = content.split("|")[0];
+            String computeId = content.split(SQL_SPLIT_DIVIDER)[0];
             content = content.substring(computeId.length()+2).trim();
             String orderId = content.split(" ")[0];
             content = content.substring(orderId.length()+1).trim();

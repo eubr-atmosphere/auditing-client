@@ -36,7 +36,7 @@ public class OpenStackCloudUtil {
         credentials.put("username", properties.getProperty(Constants.USERNAME_KEY));
         cloudUser = identityProviderPlugin.getCloudUser(credentials);
 
-        endpoint = properties.getProperty(Constants.CLOUD_URL_KEY) + cloudUser.getProjectId() + "/SERVERS";
+        endpoint = properties.getProperty(Constants.CLOUD_URL_KEY) + cloudUser.getProjectId() + "/servers";
 
     }
 

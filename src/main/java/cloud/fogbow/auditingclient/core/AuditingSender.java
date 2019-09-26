@@ -30,7 +30,7 @@ public class AuditingSender {
         message.setFogbowSite(properties.getProperty(Constants.SITE_KEY));
         Map<String, String> body = jsonfy(message);
 
-        HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, null, body);
+        HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, new HashMap<>(), body);
     }
 
     private Map<String, String> jsonfy(AuditingMessage message) {

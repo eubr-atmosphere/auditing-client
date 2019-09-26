@@ -1,12 +1,13 @@
 package cloud.fogbow.auditingclient.core.models;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class Compute {
     private String instanceId;
-    private Map<String, List<Ip>> ipAddresses;
+    private Map<String, List<Ip>> ipAddresses = new HashMap<>();
     private String serializedSystemUser;
 
     public Compute(String instanceId, String serializedSystemUser) {
@@ -61,10 +62,5 @@ public class Compute {
 
     public void setAddresses(Map<String, List<Ip>> addresses) {
         this.ipAddresses = addresses;
-    }
-
-    @Override
-    public String toString() {
-        return "id = " + instanceId + "ips: "+ ipAddresses.toString();
     }
 }
