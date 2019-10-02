@@ -1,8 +1,9 @@
 target/*
+.idea/
 src/main/resources/private/
 auditing-client.log
 auditing-client.iml
-
+ansible/private/auditing-client.conf
 # Created by https://www.gitignore.io/api/intellij,intellij+iml
 # Edit at https://www.gitignore.io/?templates=intellij,intellij+iml
 
