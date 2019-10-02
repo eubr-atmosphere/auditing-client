@@ -18,6 +18,8 @@ import java.util.Properties;
 public class AuditingSender {
     private String endpoint;
     private Properties properties;
+    private static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
+    private static final String APPLICATION_JSON_HEADER_VALUE = "application/json";
 
     public AuditingSender() {
         properties = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY);
@@ -28,16 +30,22 @@ public class AuditingSender {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         message.setCurrentTimestamp(currentTimestamp);
         message.setFogbowSite(properties.getProperty(Constants.SITE_KEY));
-        Map<String, String> body = jsonfy(message);
+        String body = jsonfy(message);
 
-        HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, null, body);
+        HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, getHeaders(), body);
     }
 
-    private Map<String, String> jsonfy(AuditingMessage message) {
-        Map<String, String> json = new HashMap<>();
-        json.put("activeComputes", GsonHolder.getInstance().toJson(message.getActiveComputes(), List.class));
-        json.put("activeFederatedNetworks", GsonHolder.getInstance().toJson(message.getActiveFederatedNetworks(), List.class));
-        json.put("currentTimestamp", GsonHolder.getInstance().toJson(message.getCurrentTimestamp(), Timestamp.class));
-        return json;
+    private String jsonfy(AuditingMessage message) {
+        Map<String, Object> json = new HashMap<>();
+        json.put("activeComputes", message.getActiveComputes());
+        json.put("activeFederatedNetworks", message.getActiveFederatedNetworks());
+        json.put("currentTimestamp", message.getCurrentTimestamp());
+        return GsonHolder.getInstance().toJson(json);
+    }
+
+    private Map<String, String> getHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put(CONTENT_TYPE_HEADER_KEY, APPLICATION_JSON_HEADER_VALUE);
+        return headers;
     }
 }

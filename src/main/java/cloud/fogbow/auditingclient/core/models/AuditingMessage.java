@@ -1,11 +1,16 @@
 package cloud.fogbow.auditingclient.core.models;
 
+import cloud.fogbow.common.util.GsonHolder;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 public class AuditingMessage {
     private List<Compute> activeComputes;
     private List<FederatedNetwork> activeFederatedNetworks;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
     private Timestamp currentTimestamp;
     private String fogbowSite;
 
@@ -44,5 +49,9 @@ public class AuditingMessage {
 
     public Timestamp getCurrentTimestamp() {
         return currentTimestamp;
+    }
+
+    public String toJson() {
+        return GsonHolder.getInstance().toJson(this);
     }
 }
