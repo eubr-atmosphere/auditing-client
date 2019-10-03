@@ -5,12 +5,10 @@ import cloud.fogbow.auditingclient.core.models.FederatedNetwork;
 import cloud.fogbow.auditingclient.core.models.Ip;
 import cloud.fogbow.common.exceptions.UnexpectedException;
 import cloud.fogbow.common.util.BashScriptRunner;
+import cloud.fogbow.common.util.GsonHolder;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DatabaseScanner {
@@ -37,16 +35,9 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getComputeFromOutput(String content) {
-        List<Compute> result = new ArrayList<>();
-        String[] tuples = content.split("[\\r\\n]+");
+        Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
 
-        for (String tuple : tuples) {
-            String serializedSysUser = tuple.split(SQL_SPLIT_DIVIDER)[0].trim();
-            String instance_id = tuple.split(SQL_SPLIT_DIVIDER)[1].trim();
-            result.add(new Compute(instance_id, serializedSysUser));
-        }
-
-        return result;
+        return Arrays.asList(result);
     }
 
     private List<FederatedNetwork> getFedNetFromOutput(String content) {

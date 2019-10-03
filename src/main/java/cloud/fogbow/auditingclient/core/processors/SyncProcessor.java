@@ -30,11 +30,12 @@ public class SyncProcessor implements Runnable {
         while(true) {
             try {
                 List<Compute> activeComputes = dbScanner.scanActiveComputes();
-                List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
+//                List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
                 logComputes(activeComputes);
-                AuditingMessage message = new AuditingMessage(activeComputes, activeFedNets);
+                AuditingMessage message = new AuditingMessage();
+                message.addComputes(activeComputes);
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);

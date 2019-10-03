@@ -1,17 +1,18 @@
 package cloud.fogbow.auditingclient.core;
 
+import java.lang.reflect.Type;
+import java.util.Date;
 import cloud.fogbow.auditingclient.core.models.AuditingMessage;
 import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.constants.HttpMethod;
 import cloud.fogbow.common.exceptions.FogbowException;
-import cloud.fogbow.common.util.GsonHolder;
 import cloud.fogbow.common.util.HomeDir;
 import cloud.fogbow.common.util.PropertiesUtil;
 import cloud.fogbow.common.util.connectivity.HttpRequestClient;
+import com.google.gson.*;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -36,11 +37,18 @@ public class AuditingSender {
     }
 
     private String jsonfy(AuditingMessage message) {
-        Map<String, Object> json = new HashMap<>();
-        json.put("activeComputes", message.getActiveComputes());
-        json.put("activeFederatedNetworks", message.getActiveFederatedNetworks());
-        json.put("currentTimestamp", message.getCurrentTimestamp());
-        return GsonHolder.getInstance().toJson(json);
+        GsonBuilder gson = new GsonBuilder();
+        gson.registerTypeAdapter(Date.class, new DateSerializer());
+        return gson
+                .create()
+                .toJson(message);
+    }
+
+    class DateSerializer implements JsonSerializer {
+        @Override
+        public JsonElement serialize(Object date, Type typeOfSrc, JsonSerializationContext context) {
+            return date == null ? null : new JsonPrimitive(((Date) date).getTime());
+        }
     }
 
     private Map<String, String> getHeaders() {

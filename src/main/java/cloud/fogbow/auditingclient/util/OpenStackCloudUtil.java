@@ -1,5 +1,6 @@
 package cloud.fogbow.auditingclient.util;
 
+import cloud.fogbow.auditingclient.core.models.AssignedIp;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.GetComputeResponse;
 import cloud.fogbow.auditingclient.core.models.Ip;
@@ -55,21 +56,20 @@ public class OpenStackCloudUtil {
             try {
                 jsonResponse = this.client.doGetRequest(endpoint + "/" + compute.getInstanceId(), cloudUser);
                 GetComputeResponse computeResponse = GetComputeResponse.fromJson(jsonResponse);
-                compute.setAddresses(getAddresses(computeResponse.getAddresses()));
+                compute.setAssignedIps(getAddresses(computeResponse.getAddresses()));
             } catch (HttpResponseException e) {
                 OpenStackHttpToFogbowExceptionMapper.map(e);
             }
         }
     }
 
-    private Map<String, List<Ip>> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
-        Map<String, List<Ip>> result = new HashMap<>();
-        for(String key : responseAddresses.keySet()) {
-            List<Ip> addresses = new ArrayList<>();
-            for(GetComputeResponse.Address address: responseAddresses.get(key)) {
-                addresses.add(new Ip(address.getAddress()));
+    private List<AssignedIp> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
+        List<AssignedIp> result = new ArrayList<>();
+        for(String networkId : responseAddresses.keySet()) {
+            for(GetComputeResponse.Address address: responseAddresses.get(networkId)) {
+                AssignedIp assignedIp = new AssignedIp(address.getAddress(), networkId, AssignedIp.Type.CLOUD);
+                result.add(assignedIp);
             }
-            result.put(key, addresses);
         }
         return result;
     }
