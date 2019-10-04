@@ -1,25 +1,34 @@
 package cloud.fogbow.auditingclient.core.models;
 
-import com.google.gson.GsonBuilder;
-
 public class AssignedIp {
-    private String ip;
+    private String address;
     private String networkId;
+    private String computeId;
     private Type type;
 
-    public AssignedIp(String ip, String networkId, Type type) {
-        this.ip = ip;
+    public AssignedIp(String address, String networkId, String computeId, Type type) {
+        this.address = address;
         this.networkId = networkId;
+        this.computeId = computeId;
         this.type = type;
     }
 
     public enum Type {
         CLOUD("cloud"), FEDNET("fednet");
 
-        private String type;
+        private String value;
 
-        Type(String type) {
-            this.type = type;
+        Type(String value) {
+            this.value = value;
         }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.address += this.computeId += this.networkId += this.type.getValue();
     }
 }

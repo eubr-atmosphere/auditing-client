@@ -4,7 +4,6 @@ import cloud.fogbow.auditingclient.core.AuditingSender;
 import cloud.fogbow.auditingclient.core.DatabaseScanner;
 import cloud.fogbow.auditingclient.core.models.AuditingMessage;
 import cloud.fogbow.auditingclient.core.models.Compute;
-import cloud.fogbow.auditingclient.core.models.FederatedNetwork;
 import cloud.fogbow.auditingclient.util.OpenStackCloudUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -30,12 +29,16 @@ public class SyncProcessor implements Runnable {
         while(true) {
             try {
                 List<Compute> activeComputes = dbScanner.scanActiveComputes();
-//                List<FederatedNetwork> activeFedNets = dbScanner.scanActiveFederatedNetworks();
+                List<Compute> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
+
                 logComputes(activeComputes);
+                logComputes(activeFedNets);
+
                 AuditingMessage message = new AuditingMessage();
                 message.addComputes(activeComputes);
+                message.addComputes(activeFedNets);
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);

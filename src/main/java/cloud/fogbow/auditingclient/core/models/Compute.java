@@ -7,6 +7,11 @@ public class Compute {
     private String serializedSystemUser;
     private List<AssignedIp> assignedIps;
 
+    public Compute(String instanceId, String serializedSystemUser) {
+        this.instanceId = instanceId;
+        this.serializedSystemUser = serializedSystemUser;
+    }
+
     public Compute(String instanceId, String serializedSystemUser, List<AssignedIp> assignedIps) {
         this.instanceId = instanceId;
         this.serializedSystemUser = serializedSystemUser;
@@ -17,7 +22,20 @@ public class Compute {
         return instanceId;
     }
 
+    public List<AssignedIp> getAssignedIps() {
+        return assignedIps;
+    }
+
     public void setAssignedIps(List<AssignedIp> assignedIps) {
         this.assignedIps = assignedIps;
+    }
+
+    @Override
+    public String toString() {
+        String value = this.instanceId + this.serializedSystemUser;
+        for(AssignedIp ip : assignedIps) {
+            value += ip.toString();
+        }
+        return value;
     }
 }

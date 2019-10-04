@@ -9,6 +9,7 @@ public class AuditingMessage {
     private List<Compute> activeComputes;
     private Timestamp currentTimestamp;
     private String fogbowSite;
+    private String clientId;
 
     public AuditingMessage() {
         this.activeComputes = new ArrayList<>();
@@ -22,7 +23,21 @@ public class AuditingMessage {
         this.currentTimestamp = currentTimestamp;
     }
 
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
     public void addComputes(List<Compute> activeComputes) {
         this.activeComputes.addAll(activeComputes);
+    }
+
+    @Override
+    public String toString() {
+        String value = "";
+        value += this.clientId + this.currentTimestamp.getTime() + this.fogbowSite;
+        for(Compute compute : this.activeComputes) {
+            value += compute.toString();
+        }
+        return value;
     }
 }
