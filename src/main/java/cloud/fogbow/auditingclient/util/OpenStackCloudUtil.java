@@ -56,18 +56,18 @@ public class OpenStackCloudUtil {
             try {
                 jsonResponse = this.client.doGetRequest(endpoint + "/" + compute.getInstanceId(), cloudUser);
                 GetComputeResponse computeResponse = GetComputeResponse.fromJson(jsonResponse);
-                compute.setAssignedIps(getAddresses(computeResponse.getAddresses()));
+                compute.setAssignedIps(getAddresses(computeResponse.getAddresses(), compute.getInstanceId()));
             } catch (HttpResponseException e) {
                 OpenStackHttpToFogbowExceptionMapper.map(e);
             }
         }
     }
 
-    private List<AssignedIp> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses) {
+    private List<AssignedIp> getAddresses(Map<String, GetComputeResponse.Address[]> responseAddresses, String computeId) {
         List<AssignedIp> result = new ArrayList<>();
         for(String networkId : responseAddresses.keySet()) {
             for(GetComputeResponse.Address address: responseAddresses.get(networkId)) {
-                AssignedIp assignedIp = new AssignedIp(address.getAddress(), networkId, AssignedIp.Type.CLOUD);
+                AssignedIp assignedIp = new AssignedIp(address.getAddress(), networkId, computeId, AssignedIp.Type.CLOUD);
                 result.add(assignedIp);
             }
         }
