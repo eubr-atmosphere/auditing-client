@@ -21,7 +21,7 @@ WORKDIR /root
 # Installing Common
 RUN \
   git clone https://github.com/fogbow/common.git && \
-  (cd common && git checkout add-bashrunner && mvn install -Dmaven.test.skip=true)
+  (cd common && git checkout develop && mvn install -Dmaven.test.skip=true)
 
 # Installing client
 RUN \
