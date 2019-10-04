@@ -1,4 +1,4 @@
-ansible/private/
+ansible/private/auditing-client.conf
 target/*
 .idea/
 src/main/resources/private/
