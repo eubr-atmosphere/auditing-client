@@ -1,4 +1,4 @@
-package cloud.fogbow.auditingclient.core.models;
+package cloud.fogbow.auditingclient.core.responses;
 
 import cloud.fogbow.common.util.GsonHolder;
 import com.google.gson.annotations.SerializedName;

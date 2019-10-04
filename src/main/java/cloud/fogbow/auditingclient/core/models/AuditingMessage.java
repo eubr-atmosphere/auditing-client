@@ -1,34 +1,18 @@
 package cloud.fogbow.auditingclient.core.models;
 
-import cloud.fogbow.common.util.GsonHolder;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AuditingMessage {
-    private List<Compute> activeComputes;
-    private List<FederatedNetwork> activeFederatedNetworks;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    private List<Compute> activeComputes;
     private Timestamp currentTimestamp;
     private String fogbowSite;
+    private String clientId;
 
-    public AuditingMessage(List<Compute> activeComputes, List<FederatedNetwork> federatedNetworks) {
-        this.activeComputes = activeComputes;
-        this.activeFederatedNetworks = federatedNetworks;
-    }
-
-    public void setActiveComputes(List<Compute> activeComputes) {
-        this.activeComputes = activeComputes;
-    }
-
-    public void setActiveFederatedNetworks(List<FederatedNetwork> activeFederatedNetworks) {
-        this.activeFederatedNetworks = activeFederatedNetworks;
-    }
-
-    public String getFogbowSite() {
-        return fogbowSite;
+    public AuditingMessage() {
+        this.activeComputes = new ArrayList<>();
     }
 
     public void setFogbowSite(String fogbowSite) {
@@ -39,19 +23,25 @@ public class AuditingMessage {
         this.currentTimestamp = currentTimestamp;
     }
 
-    public List<Compute> getActiveComputes() {
-        return activeComputes;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public List<FederatedNetwork> getActiveFederatedNetworks() {
-        return activeFederatedNetworks;
+    public String getClientId() {
+        return clientId;
     }
 
-    public Timestamp getCurrentTimestamp() {
-        return currentTimestamp;
+    public void addComputes(List<Compute> activeComputes) {
+        this.activeComputes.addAll(activeComputes);
     }
 
-    public String toJson() {
-        return GsonHolder.getInstance().toJson(this);
+    @Override
+    public String toString() {
+        String value = "";
+        value += this.clientId + this.currentTimestamp.getTime() + this.fogbowSite;
+        for(Compute compute : this.activeComputes) {
+            value += compute.toString();
+        }
+        return value;
     }
 }
