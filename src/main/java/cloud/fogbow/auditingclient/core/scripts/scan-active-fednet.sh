@@ -5,9 +5,9 @@
 docker exec -it fogbow-database /bin/bash
 #psql -h 10.11.16.23 -p 5432 -U fogbow -d fns -t -c "select serialized_system_user, ip, compute_id, id from federated_network_table inner join
 #  federated_network_order_assigned_ips on federated_network_order_assigned_ips.federated_network_order_id = federated_network_table.id where provider = 'UPV'"
-psql -h 10.11.16.23 -p 5432 -U fogbow -d fns -t -c "select json_agg(json_build_object(
+psql -U fogbow -d fns -t -c "select json_agg(json_build_object(
   'serializedSystemUser', serialized_system_user,
   'ip', ip,
   'computeId', compute_id,
   'id', id)) from federated_network_table inner join
-  federated_network_order_assigned_ips on federated_network_order_assigned_ips.federated_network_order_id = federated_network_table.id"
+  federated_network_order_assigned_ips on federated_network_order_assigned_ips.federated_network_order_id = federated_network_table.id AND provider = 'UPV'"
