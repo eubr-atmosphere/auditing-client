@@ -29,6 +29,6 @@ public class AssignedIp {
 
     @Override
     public String toString() {
-        return this.address += this.computeId += this.networkId += this.type.getValue();
+        return this.address + this.computeId + this.networkId + this.type.getValue();
     }
 }

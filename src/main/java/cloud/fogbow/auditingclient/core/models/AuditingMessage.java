@@ -27,6 +27,10 @@ public class AuditingMessage {
         this.clientId = clientId;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
     public void addComputes(List<Compute> activeComputes) {
         this.activeComputes.addAll(activeComputes);
     }

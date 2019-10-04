@@ -8,6 +8,7 @@ import cloud.fogbow.auditingclient.util.OpenStackCloudUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -32,6 +33,7 @@ public class SyncProcessor implements Runnable {
                 List<Compute> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
+                collapseSameInstanceIds(activeComputes, activeFedNets);
 
                 logComputes(activeComputes);
                 logComputes(activeFedNets);
@@ -47,6 +49,21 @@ public class SyncProcessor implements Runnable {
                 return;
             }
         }
+    }
+
+    private void collapseSameInstanceIds(List<Compute> activeComputes, List<Compute> activeFedNets) {
+        List<Compute> computesToRemove = new ArrayList<>();
+        for (Compute fedCompute : activeFedNets) {
+            Compute foundCompute = activeComputes.stream()
+                    .filter(c -> c.getInstanceId() != null && c.getInstanceId().equals(fedCompute.getInstanceId()))
+                    .findAny()
+                    .orElse(null);
+            if (foundCompute != null) {
+                foundCompute.getAssignedIps().addAll(fedCompute.getAssignedIps());
+                computesToRemove.add(fedCompute);
+            }
+        }
+        activeFedNets.removeAll(computesToRemove);
     }
 
     private void logComputes(List<Compute> computes) {

@@ -2,8 +2,7 @@ package cloud.fogbow.auditingclient.util;
 
 import cloud.fogbow.auditingclient.core.models.AssignedIp;
 import cloud.fogbow.auditingclient.core.models.Compute;
-import cloud.fogbow.auditingclient.core.models.GetComputeResponse;
-import cloud.fogbow.auditingclient.core.models.Ip;
+import cloud.fogbow.auditingclient.core.responses.GetComputeResponse;
 import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.exceptions.FogbowException;
 import cloud.fogbow.common.models.OpenStackV3User;
