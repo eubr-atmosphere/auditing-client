@@ -14,7 +14,7 @@ fi
 
 sudo docker exec $container_id /bin/bash -c "mkdir src/main/resources/private"
 client_id=$(grep ^client_id $DIR_PATH/auditing-client.conf | awk -F "=" '{print $2}')
-bash $DIR_PATH/generate-ssh-key-pair $client_id 2048
+sudo bash $DIR_PATH/generate-ssh-key-pair $client_id 2048
 mv $DIR_PATH/$client_id $DIR_PATH/private.key
 sudo docker cp $DIR_PATH/private.key $container_id:/root/auditing-client/src/main/resources/private
 sudo docker cp $DIR_PATH/$client_id $container_id:/root/auditing-client/src/main/resources/private
