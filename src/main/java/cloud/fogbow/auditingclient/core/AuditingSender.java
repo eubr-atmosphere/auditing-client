@@ -51,7 +51,9 @@ public class AuditingSender {
             String symmetricKey = CryptoUtil.generateAESKey();
             body = CryptoUtil.encryptAES(symmetricKey.getBytes(), body);
             addSymmetricKeyToHeader(headers, symmetricKey, serverPublicKey);
-            HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, body);
+            Map<String, String> bodyAsMap = new HashMap<>();
+            bodyAsMap.put("message", body);
+            HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, bodyAsMap);
         } catch (Exception e) {
             throw new FogbowException(e.getMessage());
         }
