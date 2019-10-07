@@ -36,7 +36,7 @@ public class DatabaseScanner {
 
     private List<Compute> getComputeFromOutput(String content) {
         LOGGER.info(content);
-        if(content != null) {
+        if(content != null && !content.isEmpty()) {
             Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
             return Arrays.asList(result);
         }
@@ -44,7 +44,7 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getFedNetFromOutput(String content) throws UnexpectedException {
-        if(content != null ) {
+        if(content != null && !content.isEmpty()) {
             FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
             return getComputesFromfednet(fedNetAssignments);
         }
