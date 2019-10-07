@@ -36,15 +36,19 @@ public class DatabaseScanner {
 
     private List<Compute> getComputeFromOutput(String content) {
         LOGGER.info(content);
-        Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
-
-        return Arrays.asList(result);
+        if(content != null) {
+            Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
+            return Arrays.asList(result);
+        }
+        return null;
     }
 
     private List<Compute> getFedNetFromOutput(String content) throws UnexpectedException {
-        FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
-
-        return getComputesFromfednet(fedNetAssignments);
+        if(content != null ) {
+            FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
+            return getComputesFromfednet(fedNetAssignments);
+        }
+        return null;
     }
 
     private List<Compute> getComputesFromfednet(FedNetAssignment[] fedNetAssignments) throws UnexpectedException {
