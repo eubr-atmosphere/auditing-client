@@ -40,7 +40,7 @@ public class DatabaseScanner {
             Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
             return Arrays.asList(result);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     private List<Compute> getFedNetFromOutput(String content) throws UnexpectedException {
@@ -48,7 +48,7 @@ public class DatabaseScanner {
             FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
             return getComputesFromfednet(fedNetAssignments);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     private List<Compute> getComputesFromfednet(FedNetAssignment[] fedNetAssignments) throws UnexpectedException {
