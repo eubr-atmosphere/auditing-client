@@ -6,11 +6,14 @@ import cloud.fogbow.auditingclient.core.models.FedNetAssignment;
 import cloud.fogbow.common.exceptions.UnexpectedException;
 import cloud.fogbow.common.util.BashScriptRunner;
 import cloud.fogbow.common.util.GsonHolder;
+import org.apache.log4j.Logger;
 
 import java.nio.file.Paths;
 import java.util.*;
 
 public class DatabaseScanner {
+    private static final Logger LOGGER = Logger.getLogger(DatabaseScanner.class);
+
     private BashScriptRunner bashScriptRunner;
 
     public DatabaseScanner() {
@@ -32,6 +35,7 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getComputeFromOutput(String content) {
+        LOGGER.info(content);
         Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
 
         return Arrays.asList(result);

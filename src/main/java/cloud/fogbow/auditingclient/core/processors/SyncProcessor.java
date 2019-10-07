@@ -22,7 +22,7 @@ public class SyncProcessor implements Runnable {
     public SyncProcessor() {
         dbScanner = new DatabaseScanner();
         sender = new AuditingSender();
-        this.sleepTime = 0L;
+        this.sleepTime = 60000;
     }
 
     @Override
