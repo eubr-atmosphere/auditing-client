@@ -46,7 +46,6 @@ public class SyncProcessor implements Runnable {
                 Thread.sleep(this.sleepTime);
             } catch(Exception ex) {
                 LOGGER.error(ex.getMessage(), ex);
-                return;
             }
         }
     }
