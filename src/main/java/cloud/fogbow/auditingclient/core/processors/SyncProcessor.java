@@ -45,7 +45,7 @@ public class SyncProcessor implements Runnable {
                 message.addComputes(activeComputes);
                 message.addComputes(activeFedNets);
 
-                LOGGER.info("Sending comútes...");
+                LOGGER.info("Sending computes...");
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);
