@@ -8,8 +8,8 @@ container_id=`sudo docker run --name auditing-client -idt -v /var/run/docker.soc
 
 sudo docker exec $container_id /bin/bash -c "mkdir src/main/resources/private"
 client_id=$(grep ^client_id auditing-client.conf | awk -F "=" '{print $2}')
-sudo bash generate-ssh-key-pair $client_id 1024
-mv $client_id private.key
+sudo bash generate-ssh-key-pair $client_id 2048
+mv $client_id.priv private.key
 sudo docker cp private.key $container_id:/root/auditing-client/src/main/resources/private
 sudo docker cp auditing-client.conf $container_id:/root/auditing-client/src/main/resources/private
 sudo docker exec $container_id /bin/bash -c "chmod +x src/main/java/cloud/fogbow/auditingclient/core/scripts/scan*"
