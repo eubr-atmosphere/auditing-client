@@ -35,6 +35,10 @@ public class AuditingMessage {
         this.activeComputes.addAll(activeComputes);
     }
 
+    public List<Compute> getActiveComputes() {
+        return activeComputes;
+    }
+
     @Override
     public String toString() {
         String value = "";

@@ -41,21 +41,23 @@ public class AuditingSender {
     }
 
     public void send(AuditingMessage message) throws FogbowException {
-        addInfoToMessage(message);
-        Map<String, String> headers = null;
-        String endpoint = serverEndpoint + AUDITING_ENDPOINT;
-        try {
-            String body = jsonfy(message);
-            headers = getHeaders(body, message.getClientId());
-            RSAPublicKey serverPublicKey = getServerPublicKey();
-            String symmetricKey = CryptoUtil.generateAESKey();
-            body = CryptoUtil.encryptAES(symmetricKey.getBytes(), body);
-            addSymmetricKeyToHeader(headers, symmetricKey, serverPublicKey);
-            Map<String, String> bodyAsMap = new HashMap<>();
-            bodyAsMap.put("message", body);
-            HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, bodyAsMap);
-        } catch (Exception e) {
-            throw new FogbowException(e.getMessage());
+        if (!message.getActiveComputes().isEmpty()) {
+            addInfoToMessage(message);
+            Map<String, String> headers = null;
+            String endpoint = serverEndpoint + AUDITING_ENDPOINT;
+            try {
+                String body = jsonfy(message);
+                headers = getHeaders(body, message.getClientId());
+                RSAPublicKey serverPublicKey = getServerPublicKey();
+                String symmetricKey = CryptoUtil.generateAESKey();
+                body = CryptoUtil.encryptAES(symmetricKey.getBytes(), body);
+                addSymmetricKeyToHeader(headers, symmetricKey, serverPublicKey);
+                Map<String, String> bodyAsMap = new HashMap<>();
+                bodyAsMap.put("message", body);
+                HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, bodyAsMap);
+            } catch (Exception e) {
+                throw new FogbowException(e.getMessage());
+            }
         }
     }
 
