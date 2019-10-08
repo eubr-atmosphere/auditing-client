@@ -29,7 +29,10 @@ public class SyncProcessor implements Runnable {
     public void run() {
         while(true) {
             try {
+                LOGGER.info("Reading active computes");
                 List<Compute> activeComputes = dbScanner.scanActiveComputes();
+
+                LOGGER.info("Reading active fednets");
                 List<Compute> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
                 OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
@@ -41,6 +44,8 @@ public class SyncProcessor implements Runnable {
                 AuditingMessage message = new AuditingMessage();
                 message.addComputes(activeComputes);
                 message.addComputes(activeFedNets);
+
+                LOGGER.info("Sending comútes...");
                 sender.send(message);
 
                 Thread.sleep(this.sleepTime);

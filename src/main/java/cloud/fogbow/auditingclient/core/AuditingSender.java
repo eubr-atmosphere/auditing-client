@@ -17,7 +17,9 @@ import cloud.fogbow.common.util.GsonHolder;
 import cloud.fogbow.common.util.HomeDir;
 import cloud.fogbow.common.util.PropertiesUtil;
 import cloud.fogbow.common.util.connectivity.HttpRequestClient;
+import cloud.fogbow.common.util.connectivity.HttpResponse;
 import com.google.gson.*;
+import org.apache.log4j.Logger;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -25,6 +27,9 @@ import java.util.Map;
 import java.util.Properties;
 
 public class AuditingSender {
+
+    private static final Logger LOGGER = Logger.getLogger(AuditingSender.class);
+
     private String serverEndpoint;
     private Properties properties;
     private static final String AUDITING_ENDPOINT = "/auditing";
@@ -46,18 +51,33 @@ public class AuditingSender {
             Map<String, String> headers = null;
             String endpoint = serverEndpoint + AUDITING_ENDPOINT;
             try {
+
+                LOGGER.info("Building request");
                 String body = jsonfy(message);
                 headers = getHeaders(body, message.getClientId());
+
+                LOGGER.info("[GET] server publicKey");
                 RSAPublicKey serverPublicKey = getServerPublicKey();
                 String symmetricKey = CryptoUtil.generateAESKey();
                 body = CryptoUtil.encryptAES(symmetricKey.getBytes(), body);
                 addSymmetricKeyToHeader(headers, symmetricKey, serverPublicKey);
                 Map<String, String> bodyAsMap = new HashMap<>();
                 bodyAsMap.put("message", body);
-                HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, bodyAsMap);
+
+                LOGGER.info(String.format("[POST] Auditing message to the server with %d computes", message.getActiveComputes().size()));
+                HttpResponse response = HttpRequestClient.doGenericRequest(HttpMethod.POST, endpoint, headers, bodyAsMap);
+
+                if (response.getHttpCode() >= 400) {
+                    LOGGER.info(String.format("Send Auditing message failed for: \"%s\"", response.getContent()));
+                } else {
+                    LOGGER.info("Successfully sent Auditing message");
+                }
             } catch (Exception e) {
+                LOGGER.info(String.format("Send Auditing message failed on request \"%s\"", e.getMessage()));
                 throw new FogbowException(e.getMessage());
             }
+        } else {
+            LOGGER.info("No compute read");
         }
     }
 
