@@ -52,6 +52,10 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getComputesFromfednet(FedNetAssignment[] fedNetAssignments) throws UnexpectedException {
+        if(fedNetAssignments == null) {
+            return new ArrayList<>();
+        }
+
         Map<String, Compute> computes = new HashMap<>();
         for (FedNetAssignment assignment : fedNetAssignments) {
             String orderId = assignment.getComputeId();
