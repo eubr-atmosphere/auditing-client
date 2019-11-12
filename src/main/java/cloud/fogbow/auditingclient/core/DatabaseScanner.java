@@ -3,9 +3,12 @@ package cloud.fogbow.auditingclient.core;
 import cloud.fogbow.auditingclient.core.models.AssignedIp;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.FedNetAssignment;
+import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.exceptions.UnexpectedException;
 import cloud.fogbow.common.util.BashScriptRunner;
 import cloud.fogbow.common.util.GsonHolder;
+import cloud.fogbow.common.util.HomeDir;
+import cloud.fogbow.common.util.PropertiesUtil;
 import org.apache.log4j.Logger;
 
 import java.nio.file.Paths;
@@ -21,23 +24,35 @@ public class DatabaseScanner {
     }
 
     public List<Compute> scanActiveComputes() throws UnexpectedException {
-        String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-computes.sh";
-        String[] scriptExecutorCommand = {script};
-        BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
-        return getComputeFromOutput(output.getContent());
+        List<String> cloudNames = getCloudNames();
+        List<Compute> computes = new ArrayList<>();
+        for (String cloudName : cloudNames) {
+
+            String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-computes.sh";
+            String[] scriptExecutorCommand = {script, cloudName};
+            BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
+            computes.addAll(getComputeFromOutput(output.getContent()));
+        }
+        return computes;
     }
 
     public List<Compute> scanActiveFederatedNetworks() throws UnexpectedException{
-        String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-fednet.sh";
-        String[] scriptExecutorCommand = {script};
-        BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
-        return getFedNetFromOutput(output.getContent());
+        List<String> cloudNames = getCloudNames();
+        List<Compute> computes = new ArrayList<>();
+//        for (String cloudName : cloudNames) {
+//
+//            String script = Paths.get("").toAbsolutePath().toString() + "/src/main/java/cloud/fogbow/auditingclient/core/scripts/scan-active-fednet.sh";
+//            String[] scriptExecutorCommand = {script, cloudName};
+//            BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
+//            computes.addAll(getFedNetFromOutput(output.getContent()));
+//        }
+        return computes;
     }
 
     private List<Compute> getComputeFromOutput(String content) {
-	content = content.trim();
         LOGGER.info(content);
-        if(content != null && !content.isEmpty()) {
+        if(content != null && !content.trim().isEmpty()) {
+            content = content.trim();
             Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
             return Arrays.asList(result);
         }
@@ -45,8 +60,9 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getFedNetFromOutput(String content) throws UnexpectedException {
-content = content.trim();
-        if(content != null && !content.isEmpty()) {
+        LOGGER.info(content);
+        if(content != null && !content.trim().isEmpty()) {
+            content = content.trim();
             FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
             return getComputesFromfednet(fedNetAssignments);
         }
@@ -78,5 +94,12 @@ content = content.trim();
         String[] scriptExecutorCommand = {script, orderId};
         BashScriptRunner.Output output = bashScriptRunner.runtimeRun(scriptExecutorCommand);
         return GsonHolder.getInstance().fromJson(output.getContent(), Compute.class);
+    }
+
+    private List<String> getCloudNames() {
+        String cloudNames = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY)
+                .getProperty(Constants.CLOUD_NAMES_KEY);
+
+        return Arrays.asList(cloudNames.split(","));
     }
 }
