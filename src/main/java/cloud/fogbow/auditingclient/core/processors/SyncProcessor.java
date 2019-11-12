@@ -35,7 +35,9 @@ public class SyncProcessor implements Runnable {
                 LOGGER.info("Reading active fednets");
                 List<Compute> activeFedNets = dbScanner.scanActiveFederatedNetworks();
 
-                OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
+                if(!activeComputes.isEmpty()) {
+                    OpenStackCloudUtil.getInstance().assignComputesIps(activeComputes);
+                }
                 collapseSameInstanceIds(activeComputes, activeFedNets);
 
                 logComputes(activeComputes);
