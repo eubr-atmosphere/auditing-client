@@ -2,6 +2,7 @@ package cloud.fogbow.auditingclient.util.constants;
 
 public class Constants {
     public static final String CONF_FILE_KEY = "auditing-client.conf";
+    public static final String CLOUD_NAMES_KEY = "cloud_names";
     public static final String CLOUD_URL_KEY = "cloud_url";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String DOMAIN_KEY = "domain";

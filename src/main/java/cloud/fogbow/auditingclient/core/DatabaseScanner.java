@@ -3,6 +3,7 @@ package cloud.fogbow.auditingclient.core;
 import cloud.fogbow.auditingclient.core.models.AssignedIp;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.models.FedNetAssignment;
+import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.exceptions.UnexpectedException;
 import cloud.fogbow.common.util.BashScriptRunner;
 import cloud.fogbow.common.util.GsonHolder;
@@ -35,9 +36,9 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getComputeFromOutput(String content) {
-	content = content.trim();
         LOGGER.info(content);
-        if(content != null && !content.isEmpty()) {
+        if(content != null && !content.trim().isEmpty()) {
+            content = content.trim();
             Compute[] result = GsonHolder.getInstance().fromJson(content, Compute[].class);
             return Arrays.asList(result);
         }
@@ -45,8 +46,9 @@ public class DatabaseScanner {
     }
 
     private List<Compute> getFedNetFromOutput(String content) throws UnexpectedException {
-content = content.trim();
-        if(content != null && !content.isEmpty()) {
+        LOGGER.info(content);
+        if(content != null && !content.trim().isEmpty()) {
+            content = content.trim();
             FedNetAssignment[] fedNetAssignments = GsonHolder.getInstance().fromJson(content, FedNetAssignment[].class);
             return getComputesFromfednet(fedNetAssignments);
         }

@@ -1,12 +1,11 @@
 package cloud.fogbow.auditingclient.util;
 
 import cloud.fogbow.auditingclient.core.models.AssignedIp;
+import cloud.fogbow.auditingclient.core.models.CloudSettings;
 import cloud.fogbow.auditingclient.core.models.Compute;
 import cloud.fogbow.auditingclient.core.responses.GetComputeResponse;
 import cloud.fogbow.auditingclient.util.constants.Constants;
 import cloud.fogbow.common.exceptions.FogbowException;
-import cloud.fogbow.common.models.OpenStackV3User;
-import cloud.fogbow.common.plugins.cloudidp.openstack.v3.OpenStackIdentityProviderPlugin;
 import cloud.fogbow.common.util.HomeDir;
 import cloud.fogbow.common.util.PropertiesUtil;
 import cloud.fogbow.common.util.connectivity.cloud.openstack.OpenStackHttpClient;
@@ -18,26 +17,19 @@ import java.util.*;
 public class OpenStackCloudUtil {
 
     private static OpenStackCloudUtil instance;
-    private OpenStackV3User cloudUser;
-    private String endpoint;
     private OpenStackHttpClient client;
+    private Map<String, CloudSettings> cloudSettings;
 
     private OpenStackCloudUtil() throws FogbowException {
         client = new OpenStackHttpClient();
+        cloudSettings = new HashMap<>();
 
-        Properties properties = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY);
-        String idpUrl = properties.getProperty(Constants.IDENTITY_PROVIDER_URL_KEY);
-        OpenStackIdentityProviderPlugin identityProviderPlugin = new OpenStackIdentityProviderPlugin(idpUrl);
+        List<String> cloudNames = getCloudNames();
 
-        Map<String, String> credentials = new HashMap<>();
-        credentials.put("projectname", properties.getProperty(Constants.PROJECT_NAME_KEY));
-        credentials.put("password", properties.getProperty(Constants.PASSWORD_KEY));
-        credentials.put("domain", properties.getProperty(Constants.DOMAIN_KEY));
-        credentials.put("username", properties.getProperty(Constants.USERNAME_KEY));
-        cloudUser = identityProviderPlugin.getCloudUser(credentials);
-
-        endpoint = properties.getProperty(Constants.CLOUD_URL_KEY) + cloudUser.getProjectId() + "/servers";
-
+        for (String cloudName : cloudNames) {
+            CloudSettings settings = new CloudSettings(cloudName);
+            cloudSettings.put(cloudName, settings);
+        }
     }
 
     public static OpenStackCloudUtil getInstance() throws FogbowException{
@@ -51,13 +43,17 @@ public class OpenStackCloudUtil {
 
     public void assignComputesIps(List<Compute> computes) throws FogbowException {
         for(Compute compute: computes) {
-            String jsonResponse = null;
-            try {
-                jsonResponse = this.client.doGetRequest(endpoint + "/" + compute.getInstanceId(), cloudUser);
-                GetComputeResponse computeResponse = GetComputeResponse.fromJson(jsonResponse);
-                compute.setAssignedIps(getAddresses(computeResponse.getAddresses(), compute.getInstanceId()));
-            } catch (HttpResponseException e) {
-                OpenStackHttpToFogbowExceptionMapper.map(e);
+            if (cloudSettings.containsKey(compute.getCloudName())) {
+                CloudSettings settings = cloudSettings.get(compute.getCloudName());
+                String jsonResponse = null;
+                try {
+                    jsonResponse = this.client.doGetRequest(settings.getCloudEndpoint() + "/" + compute.getInstanceId(),
+                            settings.getCloudUser());
+                    GetComputeResponse computeResponse = GetComputeResponse.fromJson(jsonResponse);
+                    compute.setAssignedIps(getAddresses(computeResponse.getAddresses(), compute.getInstanceId()));
+                } catch (HttpResponseException e) {
+                    OpenStackHttpToFogbowExceptionMapper.map(e);
+                }
             }
         }
     }
@@ -71,5 +67,12 @@ public class OpenStackCloudUtil {
             }
         }
         return result;
+    }
+
+    private List<String> getCloudNames() {
+        String cloudNames = PropertiesUtil.readProperties(HomeDir.getPath() + Constants.CONF_FILE_KEY)
+                .getProperty(Constants.CLOUD_NAMES_KEY);
+
+        return Arrays.asList(cloudNames.split(","));
     }
 }
