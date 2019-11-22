@@ -38,13 +38,4 @@ public class Compute {
     public void setCloudName(String cloudName) {
         this.cloudName = cloudName;
     }
-
-    @Override
-    public String toString() {
-        String value = this.instanceId + this.serializedSystemUser;
-        for(AssignedIp ip : assignedIps) {
-            value += ip.toString();
-        }
-        return value;
-    }
 }

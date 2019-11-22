@@ -39,13 +39,4 @@ public class AuditingMessage {
         return activeComputes;
     }
 
-    @Override
-    public String toString() {
-        String value = "";
-        value += this.clientId + this.currentTimestamp.getTime() + this.fogbowSite;
-        for(Compute compute : this.activeComputes) {
-            value += compute.toString();
-        }
-        return value;
-    }
 }

@@ -45,9 +45,6 @@ public class SyncProcessor implements Runnable {
 
                 collapseSameInstanceIds(activeComputes, activeFedNets);
 
-                logComputes(activeComputes);
-                logComputes(activeFedNets);
-
                 AuditingMessage message = new AuditingMessage();
                 message.addComputes(activeComputes);
                 message.addComputes(activeFedNets);
@@ -75,11 +72,5 @@ public class SyncProcessor implements Runnable {
             }
         }
         activeFedNets.removeAll(computesToRemove);
-    }
-
-    private void logComputes(List<Compute> computes) {
-        for(Compute compute: computes) {
-            LOGGER.info(compute.toString());
-        }
     }
 }
